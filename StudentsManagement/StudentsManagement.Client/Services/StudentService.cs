@@ -1,0 +1,49 @@
+﻿using StudentsManagement.Shared.Models;
+using StudentsManagement.Shared.StudentRepository;
+using System.Net.Http.Json;
+
+namespace StudentsManagement.Client.Services
+{
+    public class StudentService : IStudentRepository
+    {
+        private readonly HttpClient _httpClient;
+        public StudentService(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
+        public async Task<Student> AddStudentAsync(Student student)
+        {
+            var newstudent = await _httpClient.PostAsJsonAsync("api/Student/Add-Student", student);
+            var respone = await newstudent.Content.ReadFromJsonAsync<Student>();
+            return respone;
+        }
+
+        public async Task<Student> DeleteStudentAsync(int studentId)
+        {
+            var deletestudent = await _httpClient.PostAsJsonAsync("api/Student/Delete-Student", studentId);
+            var respone = await deletestudent.Content.ReadFromJsonAsync<Student>();
+            return respone;
+        }
+
+        public async Task<List<Student>> GetAllStudentsAsync()
+        {
+            var allstudents = await _httpClient.GetAsync("api/Student/All-Students");
+            var respone = await allstudents.Content.ReadFromJsonAsync<List<Student>>();
+            return respone;
+        }
+
+        public async Task<Student> GetStudentByIdAsync(int studentId)
+        {
+            var singlestudent = await _httpClient.GetAsync("api/Student/Single-Student");
+            var respone = await singlestudent.Content.ReadFromJsonAsync<Student>();
+            return respone;
+        }
+
+        public async Task<Student> UpdateStudentAsync(Student student)
+        {
+            var newstudent = await _httpClient.PostAsJsonAsync("api/Student/Update-Student", student);
+            var respone = await newstudent.Content.ReadFromJsonAsync<Student>();
+            return respone;
+        }
+    }
+}

@@ -1,0 +1,69 @@
+﻿@page "/country/edit/{id:int}"
+@using StudentsManagement.Client.Services
+@using StudentsManagement.Shared.Models
+@inject NavigationManager navigation;
+@rendermode InteractiveServer
+
+<h3>Update Country Detail</h3>
+
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <EditForm Model="countryobj" OnValidSubmit="UpdateCountry" FormName="updateCountry">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Country Code</label>
+                            <InputText for="Code" class="form-control" @bind-Value="@countryobj.Code" />
+                            <ValidationMessage For="()=>countryobj.Code" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Country Name</label>
+                            <InputText for="Name" class="form-control" @bind-Value="@countryobj.Name" />
+                            <ValidationMessage For="()=>countryobj.Name" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">Update Country</button>
+                    <button type="button" @onclick="()=>Cancel()" class="btn btn-danger">Back to list</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    public Country countryobj { get; set; } = new();
+
+    [Parameter]
+    public int id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCountry();
+    }
+
+    private async Task LoadCountry()
+    {
+        countryobj = await CountryService.GetByIdAsync(id);
+    }
+
+    protected async Task UpdateCountry()
+    {
+        var rs = await CountryService.UpdateAsync(countryobj);
+        navigation.NavigateTo("/countries-list");
+    }
+
+    public void Cancel()
+    {
+        navigation.NavigateTo("/countries-list");
+    }
+}
