@@ -286,3 +286,4 @@ D:\DOTNET_PROJECT\StudentsManagement\StudentsManagement\StudentsManagement\bin\D
 D:\DOTNET_PROJECT\StudentsManagement\StudentsManagement\StudentsManagement\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Windows.Extensions.dll
 D:\DOTNET_PROJECT\StudentsManagement\StudentsManagement\StudentsManagement\bin\Debug\net8.0\StudentsManagement.Shared.dll
 D:\DOTNET_PROJECT\StudentsManagement\StudentsManagement\StudentsManagement\bin\Debug\net8.0\StudentsManagement.Shared.pdb
+D:\DOTNET_PROJECT\StudentsManagement\StudentsManagement\StudentsManagement\obj\Debug\net8.0\StudentsManagement.sourcelink.json

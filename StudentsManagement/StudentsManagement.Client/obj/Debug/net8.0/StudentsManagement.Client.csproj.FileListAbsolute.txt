@@ -1045,3 +1045,4 @@ D:\DOTNET_PROJECT\StudentsManagement\StudentsManagement\StudentsManagement.Clien
 D:\DOTNET_PROJECT\StudentsManagement\StudentsManagement\StudentsManagement.Client\obj\Debug\net8.0\webcil\StudentsManagement.Shared.wasm
 D:\DOTNET_PROJECT\StudentsManagement\StudentsManagement\StudentsManagement.Client\obj\Debug\net8.0\compressed\rz3n2m51k6.gz
 D:\DOTNET_PROJECT\StudentsManagement\StudentsManagement\StudentsManagement.Client\obj\Debug\net8.0\compressed\u0lod03kvq.gz
+D:\DOTNET_PROJECT\StudentsManagement\StudentsManagement\StudentsManagement.Client\obj\Debug\net8.0\StudentsManagement.Client.sourcelink.json

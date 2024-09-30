@@ -47,7 +47,6 @@ namespace StudentsManagement.Services
         public async Task<Country> UpdateAsync(Country country)
         {
             if (country == null) return null;
-            Console.WriteLine(country.ToString());
             var newcountry = _context.Countries.Update(country).Entity;
             await _context.SaveChangesAsync();
             return newcountry;

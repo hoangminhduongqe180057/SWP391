@@ -1,0 +1,77 @@
+﻿@page "/systemCodeDetails-list"
+@using StudentsManagement.Client.Services
+@using StudentsManagement.Shared.Models
+@inject NavigationManager navigation;
+@inject IJSRuntime JsRunTime;
+
+
+<div class="container">
+    <div class="row">
+        <p><a class="btn btn-success float-end" href="/add-systemCodeDetail">Add New System Code Detail</a></p>
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header"></div>
+                @if (!AllSystemCodeDetails.Any())
+                {
+                    <p><em>Loading System Code Details...</em></p>
+                }
+                @if (AllSystemCodeDetails.Any())
+                {
+                    <div class="card-body">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th>System Code</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var systemCodeDetail in AllSystemCodeDetails)
+                                {
+                                    <tr>
+                                        <td>@systemCodeDetail.Id</td>
+                                        <td>@systemCodeDetail.Code</td>
+                                        <td>@systemCodeDetail.Description</td>
+                                        <td>@systemCodeDetail.SystemCode.Description</td>
+                                        <td>
+                                            <a class="btn btn-success" href="/systemCodeDetail/edit/@systemCodeDetail.Id"> Edit </a>
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-danger" href="/systemCodeDetail/delete/@systemCodeDetail.Id"> Delete </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info"> There is not System Code Detail Available</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    private List<SystemCodeDetail> AllSystemCodeDetails { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAllSystemCodeDetails();
+    }
+
+    private async Task LoadAllSystemCodeDetails()
+    {
+        var systemCodeDetails = await SystemCodeDetailService.GetAllAsync();
+         if (systemCodeDetails is null) return;
+
+        AllSystemCodeDetails.Clear();
+
+        AllSystemCodeDetails.AddRange(systemCodeDetails);
+    }
+}

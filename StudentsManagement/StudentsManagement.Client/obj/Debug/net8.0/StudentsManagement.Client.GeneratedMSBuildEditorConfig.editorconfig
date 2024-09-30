@@ -62,6 +62,30 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3R1ZGVudHNcU3R1ZGVudHNMaXN0LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/DOTNET_PROJECT/StudentsManagement/StudentsManagement/StudentsManagement.Client/Pages/SystemCodeDetails/AddSystemCodeDetail.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3lzdGVtQ29kZURldGFpbHNcQWRkU3lzdGVtQ29kZURldGFpbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DOTNET_PROJECT/StudentsManagement/StudentsManagement/StudentsManagement.Client/Pages/SystemCodeDetails/SystemCodeDetailsList.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3lzdGVtQ29kZURldGFpbHNcU3lzdGVtQ29kZURldGFpbHNMaXN0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DOTNET_PROJECT/StudentsManagement/StudentsManagement/StudentsManagement.Client/Pages/SystemCodes/AddSystemCode.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3lzdGVtQ29kZXNcQWRkU3lzdGVtQ29kZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DOTNET_PROJECT/StudentsManagement/StudentsManagement/StudentsManagement.Client/Pages/SystemCodes/DeleteSystemCode.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3lzdGVtQ29kZXNcRGVsZXRlU3lzdGVtQ29kZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DOTNET_PROJECT/StudentsManagement/StudentsManagement/StudentsManagement.Client/Pages/SystemCodes/EditSystemCode.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3lzdGVtQ29kZXNcRWRpdFN5c3RlbUNvZGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DOTNET_PROJECT/StudentsManagement/StudentsManagement/StudentsManagement.Client/Pages/SystemCodes/SystemCodesList.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3lzdGVtQ29kZXNcU3lzdGVtQ29kZXNMaXN0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/DOTNET_PROJECT/StudentsManagement/StudentsManagement/StudentsManagement.Client/RedirectToLogin.razor]
 build_metadata.AdditionalFiles.TargetPath = UmVkaXJlY3RUb0xvZ2luLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 

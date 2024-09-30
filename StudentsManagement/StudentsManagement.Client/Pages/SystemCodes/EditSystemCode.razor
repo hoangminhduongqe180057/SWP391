@@ -1,0 +1,69 @@
+﻿@page "/systemCode/edit/{id:int}"
+@using StudentsManagement.Client.Services
+@using StudentsManagement.Shared.Models
+@inject NavigationManager navigation;
+@rendermode InteractiveServer
+
+<h3>Update System Code</h3>
+
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <EditForm Model="systemCodeObj" OnValidSubmit="UpdateSystemCode" FormName="updateSystemCode">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">System Code</label>
+                            <InputText for="Code" class="form-control" @bind-Value="@systemCodeObj.Code" />
+                            <ValidationMessage For="()=>systemCodeObj.Code" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">System Code Description</label>
+                            <InputText for="Name" class="form-control" @bind-Value="@systemCodeObj.Description" />
+                            <ValidationMessage For="()=>systemCodeObj.Description" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">Update System Code</button>
+                    <button type="button" @onclick="()=>Cancel()" class="btn btn-danger">Back to list</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    public SystemCode systemCodeObj { get; set; } = new();
+
+    [Parameter]
+    public int id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSystemCode();
+    }
+
+    private async Task LoadSystemCode()
+    {
+        systemCodeObj = await SystemCodeService.GetByIdAsync(id);
+    }
+
+    protected async Task UpdateSystemCode()
+    {
+        var rs = await SystemCodeService.UpdateAsync(systemCodeObj);
+        navigation.NavigateTo("/systemCodes-list");
+    }
+
+    public void Cancel()
+    {
+        navigation.NavigateTo("/systemCodes-list");
+    }
+}

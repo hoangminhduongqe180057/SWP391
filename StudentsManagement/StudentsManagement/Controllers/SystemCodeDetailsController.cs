@@ -100,6 +100,13 @@ namespace StudentsManagement.Controllers
             return NoContent();
         }
 
+        [HttpGet("ByCode/{code}")]
+        public async Task<ActionResult<List<SystemCodeDetail>>> GetByCode(string code)
+        {
+            var details = await _context.SystemCodeDetails.FindAsync(code);
+            return Ok(details);
+        }
+
         private bool SystemCodeDetailExists(int id)
         {
             return _context.SystemCodeDetails.Any(e => e.Id == id);
