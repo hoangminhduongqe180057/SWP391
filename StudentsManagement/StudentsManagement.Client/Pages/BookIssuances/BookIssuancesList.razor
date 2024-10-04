@@ -1,0 +1,92 @@
+﻿@page "/bookIssuances-list"
+@using StudentsManagement.Shared.Models
+@inject NavigationManager navigation;
+@inject IJSRuntime JsRuntime
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Book Issuances List</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <p><a class="btn btn-success float-end" href="/add-bookIssuance">Add New Book Issuance</a></p>
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header"></div>
+                            @if (!AllBookIssuances.Any())
+                            {
+                                <p><em>Loading Book Issuances...</em></p>
+                            }
+                            @if (AllBookIssuances.Any())
+                            {
+                                <div class="card-body">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Issue Date</th>
+                                                <th>Return Date</th>
+                                                <th>Class Name</th>
+                                                <th>Student Name</th>
+                                                <th>Book Name</th>
+                                                <th>Creator</th>
+                                                <th>Notes</th>
+                                                <th>Edit</th>
+                                                <th>Delete</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var bookIssuance in AllBookIssuances)
+                                            {
+                                                <tr>
+                                                    <td>@bookIssuance.Id</td>
+                                                    <td>@bookIssuance.IssueDate.ToShortDateString()</td>
+                                                    <td>@bookIssuance.ReturnDate.ToShortDateString()</td>
+                                                    <td>@bookIssuance.Class?.Description</td>
+                                                    <td>@bookIssuance.Student?.FullName</td>
+                                                    <td>@bookIssuance.Book?.Name</td>
+                                                    <td>@bookIssuance.CreatedById</td>
+                                                    <td>@bookIssuance.Notes</td>
+                                                    <td>
+                                                        <a class="btn btn-success" href="/bookIssuance/edit/@bookIssuance.Id"> Edit </a>
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-danger" href="/bookIssuance/delete/@bookIssuance.Id"> Delete </a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-info"> There is no Book Issuances List Availlable</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    public List<BookIssuance> AllBookIssuances { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAllBookIssuances();
+    }
+    public async Task LoadAllBookIssuances()
+    {
+        var data = await BookIssuanceService.GetAllAsync();
+
+        if (data is null) return;
+
+        AllBookIssuances.Clear();
+
+        AllBookIssuances.AddRange(data);
+    }
+}

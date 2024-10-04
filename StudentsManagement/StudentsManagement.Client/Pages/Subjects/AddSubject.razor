@@ -1,0 +1,73 @@
+﻿@page "/add-subject"
+@using StudentsManagement.Shared.Models
+@inject NavigationManager navigation;
+@inject IJSRuntime JSRuntime
+@rendermode InteractiveServer
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Add New Subject</h3>
+            </div>
+            <div class="card-body">
+                <EditForm Model="subjectobj" OnValidSubmit="CreateSubject" FormName="addSubject">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Subject Name</label>
+                                    <InputText for="Name" class="form-control" @bind-Value="@subjectobj.Name" />
+                                    <ValidationMessage For="()=>subjectobj.Name" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Subject Description</label>
+                                    <InputText for="Description" class="form-control" @bind-Value="@subjectobj.Description" />
+                                    <ValidationMessage For="()=>subjectobj.Description" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Creator</label>
+                                    <InputText for="CreatedById" class="form-control" @bind-Value="@subjectobj.CreatedById" />
+                                    <ValidationMessage For="()=>subjectobj.CreatedById" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group mt-4">
+                            <button type="submit" class="btn btn-primary">Save Subject</button>
+                            <button type="button" @onclick="()=>Cancel()" class="btn btn-danger">Back to List</button>
+                        </div>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    [SupplyParameterFromForm]
+    public Subject subjectobj { get; set; } = new();
+
+    protected async Task CreateSubject()
+    {
+        try
+        {
+            var result = SubjectService.AddAsync(subjectobj);
+            navigation.NavigateTo("/subjects-list");
+        }
+        catch (Exception ex)
+        {
+            // Log hoặc hiển thị lỗi
+            await JSRuntime.InvokeVoidAsync("alert", "Error while saving the subject: " + ex.Message);
+        }
+    }
+    public void Cancel()
+    {
+        navigation.NavigateTo("/subjects-list");
+    }
+}

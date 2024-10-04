@@ -2,6 +2,7 @@
 @using StudentsManagement.Client.Services
 @using StudentsManagement.Shared.Models
 @inject NavigationManager navigation;
+@inject IJSRuntime JSRuntime
 @rendermode InteractiveServer
 
 <h3>Add New System Code</h3>
@@ -45,8 +46,15 @@
 
     protected async Task CreateSystemCode()
     {
-        var rs = await SystemCodeService.AddAsync(systemCodeObj);
-        navigation.NavigateTo("/systemCodes-list");
+        try
+        {
+            var rs = await SystemCodeService.AddAsync(systemCodeObj);
+            navigation.NavigateTo("/systemCodes-list");
+        }
+        catch(Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Error while saving the system code: " + ex.Message);
+        }
     }
 
     public void Cancel()

@@ -2,6 +2,7 @@
 @using StudentsManagement.Client.Services
 @using StudentsManagement.Shared.Models
 @inject NavigationManager navigation;
+@inject IJSRuntime JSRuntime
 @rendermode InteractiveServer
 
 <h3>Update System Code</h3>
@@ -58,8 +59,15 @@
 
     protected async Task UpdateSystemCode()
     {
-        var rs = await SystemCodeService.UpdateAsync(systemCodeObj);
-        navigation.NavigateTo("/systemCodes-list");
+        try
+        {
+            var rs = await SystemCodeService.UpdateAsync(systemCodeObj);
+            navigation.NavigateTo("/systemCodes-list");
+        }
+        catch(Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Error while updating the system code: " + ex.Message);
+        }
     }
 
     public void Cancel()

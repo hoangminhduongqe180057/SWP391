@@ -5,8 +5,8 @@ D:\DOTNET_PROJECT\StudentsManagement\StudentsManagement.Shared\obj\Debug\net8.0\
 D:\DOTNET_PROJECT\StudentsManagement\StudentsManagement.Shared\obj\Debug\net8.0\StudentsManagement.Shared.AssemblyInfoInputs.cache
 D:\DOTNET_PROJECT\StudentsManagement\StudentsManagement.Shared\obj\Debug\net8.0\StudentsManagement.Shared.AssemblyInfo.cs
 D:\DOTNET_PROJECT\StudentsManagement\StudentsManagement.Shared\obj\Debug\net8.0\StudentsManagement.Shared.csproj.CoreCompileInputs.cache
+D:\DOTNET_PROJECT\StudentsManagement\StudentsManagement.Shared\obj\Debug\net8.0\StudentsManagement.Shared.sourcelink.json
 D:\DOTNET_PROJECT\StudentsManagement\StudentsManagement.Shared\obj\Debug\net8.0\StudentsManagement.Shared.dll
 D:\DOTNET_PROJECT\StudentsManagement\StudentsManagement.Shared\obj\Debug\net8.0\refint\StudentsManagement.Shared.dll
 D:\DOTNET_PROJECT\StudentsManagement\StudentsManagement.Shared\obj\Debug\net8.0\StudentsManagement.Shared.pdb
 D:\DOTNET_PROJECT\StudentsManagement\StudentsManagement.Shared\obj\Debug\net8.0\ref\StudentsManagement.Shared.dll
-D:\DOTNET_PROJECT\StudentsManagement\StudentsManagement.Shared\obj\Debug\net8.0\StudentsManagement.Shared.sourcelink.json

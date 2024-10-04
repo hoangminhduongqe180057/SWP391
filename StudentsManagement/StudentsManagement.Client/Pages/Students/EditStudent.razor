@@ -1,6 +1,7 @@
 ﻿@page "/student/edit/{id:int}"
 @using StudentsManagement.Shared.Models
 @inject NavigationManager navigation;
+@inject IJSRuntime JSRuntime
 @rendermode InteractiveServer
 
 <h3>Update Student Detail</h3>
@@ -133,8 +134,15 @@
 
     protected async Task UpdateStudent()
     {
-        var result = await StudentService.UpdateStudentAsync(studobj);
-        navigation.NavigateTo("/students-list");
+        try
+        {
+            var result = await StudentService.UpdateStudentAsync(studobj);
+            navigation.NavigateTo("/students-list");
+        }
+        catch(Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Error while updating the student: " + ex.Message);
+        }
     }
 
     public void Cancel()

@@ -5,52 +5,61 @@
 @inject IJSRuntime JsRunTime;
 
 
-<div class="container">
-    <div class="row">
-        <p><a class="btn btn-success float-end" href="/add-systemCode">Add New System Code</a></p>
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header"></div>
-                @if (!AllSystemCodes.Any())
-                {
-                    <p><em>Loading System Codes...</em></p>
-                }
-                @if (AllSystemCodes.Any())
-                {
-                    <div class="card-body">
-                        <table class="table table-striped table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Code</th>
-                                    <th>Description</th>
-                                    <th>Edit</th>
-                                    <th>Delete</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var systemCode in AllSystemCodes)
-                                {
-                                    <tr>
-                                        <td>@systemCode.Id</td>
-                                        <td>@systemCode.Code</td>
-                                        <td>@systemCode.Description</td>
-                                        <td>
-                                            <a class="btn btn-success" href="/systemCode/edit/@systemCode.Id"> Edit </a>
-                                        </td>
-                                        <td>
-                                            <a class="btn btn-danger" href="/systemCode/delete/@systemCode.Id"> Delete </a>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">System Codes List</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <p><a class="btn btn-success float-end" href="/add-systemCode">Add New System Code</a></p>
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header"></div>
+                            @if (!AllSystemCodes.Any())
+                            {
+                                <p><em>Loading System Codes...</em></p>
+                            }
+                            @if (AllSystemCodes.Any())
+                            {
+                                <div class="card-body">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Code</th>
+                                                <th>Description</th>
+                                                <th>Edit</th>
+                                                <th>Delete</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var systemCode in AllSystemCodes)
+                                            {
+                                                <tr>
+                                                    <td>@systemCode.Id</td>
+                                                    <td>@systemCode.Code</td>
+                                                    <td>@systemCode.Description</td>
+                                                    <td>
+                                                        <a class="btn btn-success" href="/systemCode/edit/@systemCode.Id"> Edit </a>
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-danger" href="/systemCode/delete/@systemCode.Id"> Delete </a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-info"> There is not System Code Available</div>
+                            }
+                        </div>
                     </div>
-                }
-                else
-                {
-                    <div class="alert alert-info"> There is not System Code Available</div>
-                }
+                </div>
             </div>
         </div>
     </div>

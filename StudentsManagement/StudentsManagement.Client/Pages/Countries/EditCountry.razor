@@ -2,6 +2,7 @@
 @using StudentsManagement.Client.Services
 @using StudentsManagement.Shared.Models
 @inject NavigationManager navigation;
+@inject IJSRuntime JSRuntime
 @rendermode InteractiveServer
 
 <h3>Update Country Detail</h3>
@@ -58,8 +59,15 @@
 
     protected async Task UpdateCountry()
     {
-        var rs = await CountryService.UpdateAsync(countryobj);
-        navigation.NavigateTo("/countries-list");
+        try
+        {
+            var rs = await CountryService.UpdateAsync(countryobj);
+            navigation.NavigateTo("/countries-list");
+        }
+        catch(Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Error while updating the country: " + ex.Message);
+        }
     }
 
     public void Cancel()

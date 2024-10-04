@@ -1,0 +1,94 @@
+﻿@page "/systemCodeDetail/edit/{id:int}"
+@using StudentsManagement.Client.Services
+@using StudentsManagement.Shared.Models
+@inject NavigationManager navigation;
+@inject IJSRuntime JSRuntime
+@rendermode InteractiveServer
+
+<h3>Edit System Code Detail</h3>
+
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <EditForm Model="systemCodeDetailObj" OnValidSubmit="UpdateSystemCodeDetail" FormName="addSystemCodeDetail">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Code</label>
+                            <InputText for="Code" class="form-control" @bind-Value="@systemCodeDetailObj.Code" />
+                            <ValidationMessage For="()=>systemCodeDetailObj.Code" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Description</label>
+                            <InputText for="Description" class="form-control" @bind-Value="@systemCodeDetailObj.Description" />
+                            <ValidationMessage For="()=>systemCodeDetailObj.Description" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">System Code</label>
+                            <InputSelect for="SystemCodeId" class="form-control" @bind-Value="@systemCodeDetailObj.SystemCodeId">
+                                <option value="">Select System Code</option>
+                                @foreach (var systemCode in SystemCodes)
+                                {
+                                    <option value="@systemCode.Id">@systemCode.Description</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="()=>systemCodeDetailObj.SystemCodeId" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">Update System Code Detail</button>
+                    <button type="button" @onclick="()=>Cancel()" class="btn btn-danger">Back to list</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    public SystemCodeDetail systemCodeDetailObj { get; set; } = new();
+
+    List<SystemCode> SystemCodes = new List<SystemCode>();
+
+    [Parameter]
+    public int id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSystemCodeDetail();
+        SystemCodes = await SystemCodeService.GetAllAsync();
+    }
+
+    private async Task LoadSystemCodeDetail()
+    {
+        systemCodeDetailObj = await SystemCodeDetailService.GetByIdAsync(id);
+    }
+
+    protected async Task UpdateSystemCodeDetail()
+    {
+        try
+        {
+            var rs = await SystemCodeDetailService.UpdateAsync(systemCodeDetailObj);
+            navigation.NavigateTo("/systemCodeDetails-list");
+        }
+        catch(Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Error while updating the system code detail: " + ex.Message);
+        }
+    }
+
+    public void Cancel()
+    {
+        navigation.NavigateTo("/systemCodeDetails-list");
+    }
+}

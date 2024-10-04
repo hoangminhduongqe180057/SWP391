@@ -51,7 +51,7 @@ namespace StudentsManagement.Services
 
         public async Task<SystemCodeDetail> GetByIdAsync(int scdId)
         {
-            var scd = await _context.SystemCodeDetails.Where(x => x.Id == scdId).FirstOrDefaultAsync();
+            var scd = await _context.SystemCodeDetails.Include(x => x.SystemCode).Where(x => x.Id == scdId).FirstOrDefaultAsync();
             if (scd == null) return null;
             return scd;
         }

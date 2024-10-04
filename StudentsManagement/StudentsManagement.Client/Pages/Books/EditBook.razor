@@ -1,0 +1,133 @@
+﻿@page "/book/edit/{id:int}"
+@using StudentsManagement.Shared.Models
+@inject NavigationManager navigation;
+@inject IJSRuntime JSRuntime
+@rendermode InteractiveServer
+
+<h3>Update Book Detail</h3>
+
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <EditForm Model="bookobj" OnValidSubmit="UpdateBook" FormName="updatebook">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Book Name</label>
+                            <InputText for="Name" class="form-control" @bind-Value="@bookobj.Name" />
+                            <ValidationMessage For="()=>bookobj.Name" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Book Auther</label>
+                            <InputText for="Auther" class="form-control" @bind-Value="@bookobj.Auther" />
+                            <ValidationMessage For="()=>bookobj.Auther" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">No Of Copies</label>
+                            <div class="input-group">
+                                <button type="button" class="btn btn-outline-secondary" @onclick="DecrementCopies">-</button>
+                                <InputText for="NoOfCopy" class="form-control text-center" @bind-Value="@bookobj.NoOfCopy" />
+                                <button type="button" class="btn btn-outline-secondary" @onclick="IncrementCopies">+</button>
+                            </div>
+                            <ValidationMessage For="()=>bookobj.NoOfCopy" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Book Category</label>
+                            <InputSelect for="BookCategoryId" class="form-control" @bind-Value="@bookobj.BookCateGoryId">
+                                <option value="">Select Category</option>
+                                @if (BookCategory != null && BookCategory.Any())
+                                {
+                                    @foreach (var category in BookCategory)
+                                    {
+                                        <option value="@category.Id">@category.Description</option>
+                                    }
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="()=>bookobj.BookCateGoryId" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">Update Book</button>
+                    <button type="button" @onclick="()=>Cancel()" class="btn btn-danger">Back to list</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    public Book bookobj { get; set; } = new();
+    List<SystemCodeDetail> BookCategory = new List<SystemCodeDetail>();
+
+    [Parameter]
+    public int id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadBook();
+        BookCategory = await SystemCodeDetailService.GetByCodeAsync("BookCategory");
+    }
+
+    private async Task LoadBook()
+    {
+        bookobj = await BookService.GetByIdAsync(id);
+    }
+
+    protected async Task UpdateBook()
+    {
+        try
+        {
+            var result = await BookService.UpdateAsync(bookobj);
+            navigation.NavigateTo("/books-list");
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Error while updating the book: " + ex.Message);
+        }
+    }
+
+    public void Cancel()
+    {
+        navigation.NavigateTo("/books-list");
+    }
+
+    // Phương thức tăng số lượng
+    private void IncrementCopies()
+    {
+        if (int.TryParse(bookobj.NoOfCopy, out var copies))
+        {
+            bookobj.NoOfCopy = (copies + 1).ToString();
+        }
+        else
+        {
+            bookobj.NoOfCopy = "1"; // Gán giá trị mặc định nếu đầu vào không hợp lệ
+        }
+    }
+
+    // Phương thức giảm số lượng
+    private void DecrementCopies()
+    {
+        if (int.TryParse(bookobj.NoOfCopy, out var copies) && copies > 0)
+        {
+            bookobj.NoOfCopy = (copies - 1).ToString();
+        }
+        else
+        {
+            bookobj.NoOfCopy = "0"; // Không cho giảm xuống giá trị âm
+        }
+    }
+}
