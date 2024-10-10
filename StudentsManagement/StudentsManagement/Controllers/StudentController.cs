@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using StudentsManagement.Client.Repository;
+using StudentsManagement.Data;
 using StudentsManagement.Shared.Models;
 using StudentsManagement.Shared.StudentRepository;
 
@@ -10,17 +12,17 @@ namespace StudentsManagement.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
-        private readonly IStudentRepository _studentRepository;
-        public StudentController(IStudentRepository studentRepository)
+        private readonly ApplicationDbContext _context;
+        public StudentController(ApplicationDbContext context)
         {
-            this._studentRepository = studentRepository;
+            this._context = context;
         }
 
 
         [HttpGet("All-Students")]
         public async Task<ActionResult<List<Student>>> GetAllStudentsAsync()
         {
-            var students = await _studentRepository.GetAllStudentsAsync();
+            var students = await _context.Students.ToListAsync();
             return Ok(students);
         }
 
@@ -28,7 +30,7 @@ namespace StudentsManagement.Controllers
         [HttpGet("Single-Student/{id}")]
         public async Task<ActionResult<Student>> GetSingleStudentAsync(int id)
         {
-            var student = await _studentRepository.GetStudentByIdAsync(id);
+            var student = await _context.Students.FindAsync(id);
 
             return Ok(student);
         }
@@ -36,7 +38,7 @@ namespace StudentsManagement.Controllers
         [HttpPost("Add-Student")]
         public async Task<ActionResult<Student>> AddNewStudentAsync(Student student)
         {
-            var newStudent = await _studentRepository.AddStudentAsync(student);
+            var newStudent = await _context.Students.AddAsync(student);
             return Ok(newStudent);
         }
 
@@ -44,18 +46,51 @@ namespace StudentsManagement.Controllers
         [HttpDelete("DeleteStudent/{id}")]
         public async Task<ActionResult<Student>> DeleteStudentAsync(int id)
         {
-            var deletestudent = await _studentRepository.DeleteStudentAsync(id);
+            var student = await _context.Students.FindAsync(id);
+            if (student == null)
+            {
+                return NotFound();
+            }
 
-            return Ok(deletestudent);
+            _context.Students.Remove(student);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
 
-        [HttpPost("Update-Student")]
-        public async Task<ActionResult<Student>> UpdateStudentAsync(Student student)
+        [HttpPut("Update-Student")]
+        public async Task<IActionResult> UpdateSingleStudent(int id, Student student)
         {
-            var updatestudent = await _studentRepository.UpdateStudentAsync(student);
+            if (id != student.Id)
+            {
+                return BadRequest();
+            }
 
-            return Ok(updatestudent);
+            _context.Entry(student).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!StudentExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        private bool StudentExists(int id)
+        {
+            return _context.Students.Any(e => e.Id == id);
         }
 
     }

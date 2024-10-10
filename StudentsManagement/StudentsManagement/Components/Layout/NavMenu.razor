@@ -7,17 +7,23 @@
         <img src="AdminLTE/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">Students</span>
     </a>
+
+    <!-- Sidebar -->
     <div class="sidebar">
+        <!-- Sidebar user panel -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
                 <img src="AdminLTE/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block">Macro Code</a>
+                <a href="#" class="d-block">Minh Duong</a>
             </div>
         </div>
+
+        <!-- Sidebar menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
                 <!-- Dashboard -->
                 <li class="nav-item menu-open">
                     <NavLink href="" Match="NavLinkMatch.All" class="nav-link active">
@@ -72,7 +78,7 @@
                 <!-- Library Dropdown -->
                 <li class="nav-item has-treeview @(isLibraryOpen ? "menu-open" : "")">
                     <a href="javascript:void(0);" class="nav-link" @onclick="ToggleLibrary">
-                        <i class="nav-icon fas fa-th"></i>
+                        <i class="nav-icon fas fa-book"></i>
                         <p>
                             Library
                             <i class="right fas fa-angle-left"></i>
@@ -97,7 +103,7 @@
                 <!-- System Administration Dropdown -->
                 <li class="nav-item has-treeview @(isSystemAdminOpen ? "menu-open" : "")">
                     <a href="javascript:void(0);" class="nav-link" @onclick="ToggleSystemAdministration">
-                        <i class="nav-icon fas fa-th"></i>
+                        <i class="nav-icon fas fa-cogs"></i>
                         <p>
                             System Administration
                             <i class="right fas fa-angle-left"></i>
@@ -124,6 +130,38 @@
                         </li>
                     </ul>
                 </li>
+
+                <!-- Authorization View -->
+                <AuthorizeView>
+                    <Authorized>
+                        <div class="nav-item px-3">
+                            <NavLink class="nav-link" href="Account/Manage">
+                                <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
+                            </NavLink>
+                        </div>
+                        <div class="nav-item px-3">
+                            <form action="Account/Logout" method="post">
+                                <AntiforgeryToken />
+                                <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                                <button type="submit" class="nav-link">
+                                    <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
+                                </button>
+                            </form>
+                        </div>
+                    </Authorized>
+                    <NotAuthorized>
+                        <div class="nav-item px-3">
+                            <NavLink class="nav-link" href="Account/Register">
+                                <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
+                            </NavLink>
+                        </div>
+                        <div class="nav-item px-3">
+                            <NavLink class="nav-link" href="Account/Login">
+                                <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
+                            </NavLink>
+                        </div>
+                    </NotAuthorized>
+                </AuthorizeView>
             </ul>
         </nav>
     </div>

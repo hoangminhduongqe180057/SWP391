@@ -15,18 +15,18 @@ namespace StudentsManagement.Controllers
     [ApiController]
     public class TeachersController : ControllerBase
     {
-        private readonly ITeacherRepository _teacherRepository;
+        private readonly ApplicationDbContext _context;
 
-        public TeachersController(ITeacherRepository teacherRepository)
+        public TeachersController(ApplicationDbContext context)
         {
-            _teacherRepository = teacherRepository;
+            _context = context;
         }
 
         // GET: api/Teachers
         [HttpGet("All-Teachers")]
         public async Task<ActionResult<List<Teacher>>> GetAllTeachersAsyncs()
         {
-            var teachers = await _teacherRepository.GetAllAsync();
+            var teachers = await _context.Teachers.ToListAsync();
             return Ok(teachers);
         }
 
@@ -34,7 +34,7 @@ namespace StudentsManagement.Controllers
         [HttpGet("Single-Teacher/{id}")]
         public async Task<ActionResult<Teacher>> GetTeacherByIdAsync(int id)
         {
-            var student = await _teacherRepository.GetByIdAsync(id);
+            var student = await _context.Teachers.FindAsync(id);
 
             return Ok(student);
         }
@@ -44,26 +44,61 @@ namespace StudentsManagement.Controllers
         [HttpPut("Update-Teacher")]
         public async Task<IActionResult> AddNewTeacherAsync(Teacher teacher)
         {
-            var updateTeacher = await _teacherRepository.UpdateAsync(teacher);
+            var updateTeacher = await _context.Teachers.AddAsync(teacher);
 
             return Ok(updateTeacher);
         }
 
         // POST: api/Teachers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("Add-Teacher")]
-        public async Task<ActionResult<Teacher>> PostTeacher(Teacher teacher)
+        [HttpPut("Add-Teacher")]
+        public async Task<IActionResult> UpdateSingleTeacher(int id, Teacher teacher)
         {
-            var newTeacher = await _teacherRepository.AddAsync(teacher);
-            return Ok(newTeacher);
+            if (id != teacher.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(teacher).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TeacherExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
         // DELETE: api/Teachers/5
         [HttpDelete("DeleteTeacher/{id}")]
-        public async Task<IActionResult> DeleteTeacher(int id)
+        public async Task<ActionResult<Student>> DeleteTeacherAsync(int id)
         {
-            var deleteTeacher = await _teacherRepository.DeleteAsync(id);
-            return Ok(deleteTeacher);
+            var teacher = await _context.Teachers.FindAsync(id);
+            if (teacher == null)
+            {
+                return NotFound();
+            }
+
+            _context.Teachers.Remove(teacher);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool TeacherExists(int id)
+        {
+            return _context.Teachers.Any(e => e.Id == id);
         }
     }
 }

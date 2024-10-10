@@ -16,20 +16,17 @@ namespace StudentsManagement.Controllers
     [ApiController]
     public class CountriesController : ControllerBase
     {
-        // private readonly ApplicationDbContext _context; , ApplicationDbContext context
-
-        private readonly ICountryRepository _countryRepository;
-        public CountriesController(ICountryRepository countryRepository)
+        private readonly ApplicationDbContext _context;
+        public CountriesController(ApplicationDbContext context)
         {
-           // _context = context;
-            _countryRepository = countryRepository;
+            _context = context;
         }
 
         // GET: api/Countries
         [HttpGet("All-Countries")]
         public async Task<ActionResult<List<Country>>> GetAllCountries()
         {
-            var countries = await _countryRepository.GetAllAsync();
+            var countries = await _context.Countries.ToListAsync();
 
             return Ok(countries);
         }
@@ -38,19 +35,40 @@ namespace StudentsManagement.Controllers
         [HttpGet("Single-Country/{id}")]
         public async Task<ActionResult<Country>> GetSingleCountry(int id)
         {
-            var country = await _countryRepository.GetByIdAsync(id);
+            var country = await _context.Countries.FindAsync(id);
 
             return Ok(country);
         }
 
         // PUT: api/Countries/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("Update-Country")]
-        public async Task<ActionResult<Country>> UpdateAsync(Country country)
+        [HttpPut("Update-Country")]
+        public async Task<IActionResult> UpdateSingleCountry(int id, Country country)
         {
-            var updateCountry = await _countryRepository.UpdateAsync(country);
+            if (id != country.Id)
+            {
+                return BadRequest();
+            }
 
-            return Ok(updateCountry);
+            _context.Entry(country).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CountryExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
         // POST: api/Countries
@@ -58,7 +76,7 @@ namespace StudentsManagement.Controllers
         [HttpPost("Add-Country")]
         public async Task<ActionResult<Student>> AddAsync(Country mod)
         {
-            var newcountry = await _countryRepository.AddAsync(mod);
+            var newcountry = await _context.Countries.AddAsync(mod);
 
             return Ok(newcountry);
         }
@@ -67,14 +85,21 @@ namespace StudentsManagement.Controllers
         [HttpDelete("Delete-Country/{id}")]
         public async Task<ActionResult<Country>> DeleteAsync(int id)
         {
-            var deletecountry = await _countryRepository.DeleteAsync(id);
+            var country = await _context.Countries.FindAsync(id);
+            if (country == null)
+            {
+                return NotFound();
+            }
 
-            return Ok(deletecountry);
+            _context.Countries.Remove(country);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
-        //private bool CountryExists(int id)
-        //{
-        //    return _context.Countries.Any(e => e.Id == id);
-        //}
+        private bool CountryExists(int id)
+        {
+            return _context.Countries.Any(e => e.Id == id);
+        }
     }
 }

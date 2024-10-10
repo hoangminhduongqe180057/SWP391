@@ -19,7 +19,12 @@
     }
     return obj;
   }
-
+    var element = document.getElementById("your-sparkline-element");
+    if (element) {
+        new Sparkline(element, options);
+    } else {
+        console.error("Element not found!");
+    }
   function Sparkline(element, options) {
     this.element = element;
     this.options = extend(options || {}, Sparkline.options);
