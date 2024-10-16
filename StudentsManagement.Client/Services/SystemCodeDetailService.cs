@@ -1,0 +1,63 @@
+﻿using StudentsManagement.Client.Repository;
+using StudentsManagement.Shared.Models;
+using System.Net.Http.Json;
+
+namespace StudentsManagement.Client.Services
+{
+    public class SystemCodeDetailService : ISystemCodeDetailRepository
+    {
+        private readonly HttpClient _httpClient;
+        public SystemCodeDetailService(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
+
+        public async Task<SystemCodeDetail> AddAsync(SystemCodeDetail systemCodeDetail)
+        {
+            var data = await _httpClient.PostAsJsonAsync("api/SystemCodeDetails/Add-SystemCodeDetail", systemCodeDetail);
+            var respone = await data.Content.ReadFromJsonAsync<SystemCodeDetail>();
+            return respone;
+        }
+
+        public async Task<SystemCodeDetail> DeleteAsync(int systemCodeDetailId)
+        {
+            var data = await _httpClient.PostAsJsonAsync("api/SystemCodeDetails/Delete-SystemCodeDetail", systemCodeDetailId);
+            var respone = await data.Content.ReadFromJsonAsync<SystemCodeDetail>();
+            return respone;
+        }
+
+        public async Task<List<SystemCodeDetail>> GetAllAsync()
+        {
+            var data = await _httpClient.GetAsync("api/SystemCodeDetails/All-SystemCodeDetails");
+            var respone = await data.Content.ReadFromJsonAsync<List<SystemCodeDetail>>();
+            return respone;
+        }
+
+        public async Task<SystemCodeDetail> GetByIdAsync(int systemCodeDetailId)
+        {
+            var data = await _httpClient.GetAsync($"api/SystemCodeDetails/Single-SystemCodeDetail/{systemCodeDetailId}");
+            var respone = await data.Content.ReadFromJsonAsync<SystemCodeDetail>();
+            return respone;
+        }
+
+        public async Task<SystemCodeDetail> UpdateAsync(SystemCodeDetail systemCodeDetail)
+        {
+            var data = await _httpClient.PostAsJsonAsync("api/SystemCodeDetails/Update-SystemCodeDetail", systemCodeDetail);
+            var respone = await data.Content.ReadFromJsonAsync<SystemCodeDetail>();
+            return respone;
+        }
+
+        public async Task<List<SystemCodeDetail>> GetByCodeAsync(string code)
+        {
+            var response = await _httpClient.GetFromJsonAsync<List<SystemCodeDetail>>($"api/SystemCodeDetails/ByCode/{code}");
+
+            if (response == null)
+            {
+                return new List<SystemCodeDetail>(); // Return an empty list if null
+            }
+
+            return response;
+        }
+
+    }
+}

@@ -1,0 +1,144 @@
+﻿@page "/bookIssuance/edit/{id:int}"
+@using StudentsManagement.Shared.Models
+@inject NavigationManager navigation;
+@inject IJSRuntime JSRuntime
+@rendermode InteractiveServer
+
+<h3>Update Book Issuance Detail</h3>
+
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <EditForm Model="bookobj" OnValidSubmit="UpdateBookIssuance" FormName="updatebookissuance">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Issue Date</label>
+                            <InputDate for="IssueDate" class="form-control" @bind-Value="@bookobj.IssueDate" />
+                            <ValidationMessage For="()=>bookobj.IssueDate" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Due Date</label>
+                            <InputDate for="DueDate" class="form-control" @bind-Value="@bookobj.DueDate" />
+                            <ValidationMessage For="()=>bookobj.DueDate" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Class Name</label>
+                            <InputSelect for="ClassId" class="form-control" @bind-Value="@bookobj.ClassId">
+                                <option value="">Select Class</option>
+                                @if (Class != null && Class.Any())
+                                {
+                                    @foreach (var item in Class)
+                                    {
+                                        <option value="@item.Id">@item.Description</option>
+                                    }
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="()=>bookobj.ClassId" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Student Name</label>
+                            <InputSelect for="StudentId" class="form-control" @bind-Value="@bookobj.StudentId">
+                                <option value="">Select Student</option>
+                                @if (Students != null && Students.Any())
+                                {
+                                    @foreach (var student in Students)
+                                    {
+                                        <option value="@student.Id">@student.FullName</option>
+                                    }
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="()=>bookobj.StudentId" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Book Name</label>
+                            <InputSelect for="BookId" class="form-control" @bind-Value="@bookobj.BookId">
+                                <option value="">Select Class</option>
+                                @if (Books != null && Books.Any())
+                                {
+                                    @foreach (var book in Books)
+                                    {
+                                        <option value="@book.Id">@book.Name</option>
+                                    }
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="()=>bookobj.BookId" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Creator</label>
+                            <InputText for="CreatedById" class="form-control" @bind-Value="@bookobj.CreatedById" />
+                            <ValidationMessage For="()=>bookobj.CreatedById" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">Notes</label>
+                            <InputText for="Notes" class="form-control" @bind-Value="@bookobj.Notes" />
+                            <ValidationMessage For="()=>bookobj.Notes" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary">Save Book Issuance</button>
+                    <button type="button" @onclick="()=>Cancel()" class="btn btn-danger">Back to List</button>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    public BookIssuance bookobj { get; set; } = new();
+    List<SystemCodeDetail> Class = new List<SystemCodeDetail>();
+    List<Book> Books = new List<Book>();
+    List<Student> Students = new List<Student>();
+
+    [Parameter]
+    public int id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadBookIssuance();
+        Class = await SystemCodeDetailService.GetByCodeAsync("Class");
+        Books = await BookService.GetAllAsync();
+        Students = await StudentService.GetAllStudentsAsync();
+    }
+
+    private async Task LoadBookIssuance()
+    {
+        bookobj = await BookIssuanceService.GetByIdAsync(id);
+    }
+
+    protected async Task UpdateBookIssuance()
+    {
+        try
+        {
+            var result = await BookIssuanceService.UpdateAsync(bookobj);
+            navigation.NavigateTo("/bookIssuances-list");
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("alert", "Error while updating the book issuance: " + ex.Message);
+        }
+    }
+
+    public void Cancel()
+    {
+        navigation.NavigateTo("/bookIssuances-list");
+    }
+}
